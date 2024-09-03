@@ -63,15 +63,17 @@ class ModbusRTUSlave {
     unsigned long _flushCompensationDelay;
     #endif
 
-    void _processReadCoils();
-    void _processReadDiscreteInputs();
-    void _processReadHoldingRegisters();
-    void _processReadInputRegisters();
-    void _processWriteSingleCoil();
-    void _processWriteSingleHoldingRegister();
-    void _processWriteMultipleCoils();
-    void _processWriteMultipleHoldingRegisters();
+  protected:
+    virtual void processReadCoils();
+    virtual void processReadDiscreteInputs();
+    virtual void processReadHoldingRegisters();
+    virtual void processReadInputRegisters();
+    virtual void processWriteSingleCoil();
+    virtual void processWriteSingleHoldingRegister();
+    virtual void processWriteMultipleCoils();
+    virtual void processWriteMultipleHoldingRegisters();
 
+  private:
     bool _readRequest();
     void _writeResponse(uint8_t len);
     void _exceptionResponse(uint8_t code);

@@ -100,28 +100,28 @@ void ModbusRTUSlave::poll() {
     if (_readRequest()) {
       switch (_buf[1]) {
         case 1:
-          _processReadCoils();
+          processReadCoils();
           break;
         case 2:
-          _processReadDiscreteInputs();
+          processReadDiscreteInputs();
           break;
         case 3:
-          _processReadHoldingRegisters();
+          processReadHoldingRegisters();
           break;
         case 4:
-          _processReadInputRegisters();
+          processReadInputRegisters();
           break;
         case 5:
-          _processWriteSingleCoil();
+          processWriteSingleCoil();
           break;
         case 6:
-          _processWriteSingleHoldingRegister();
+          processWriteSingleHoldingRegister();
           break;
         case 15:
-          _processWriteMultipleCoils();
+          processWriteMultipleCoils();
           break;
         case 16:
-          _processWriteMultipleHoldingRegisters();
+          processWriteMultipleHoldingRegisters();
           break;
         default:
           _exceptionResponse(1);
@@ -131,7 +131,7 @@ void ModbusRTUSlave::poll() {
   }
 }
 
-void ModbusRTUSlave::_processReadCoils() {
+void ModbusRTUSlave::processReadCoils() {
   uint16_t startAddress = _bytesToWord(_buf[2], _buf[3]);
   uint16_t quantity = _bytesToWord(_buf[4], _buf[5]);
   if (!_coils || _numCoils == 0) _exceptionResponse(1);
@@ -146,7 +146,7 @@ void ModbusRTUSlave::_processReadCoils() {
   }
 }
 
-void ModbusRTUSlave::_processReadDiscreteInputs() {
+void ModbusRTUSlave::processReadDiscreteInputs() {
   uint16_t startAddress = _bytesToWord(_buf[2], _buf[3]);
   uint16_t quantity = _bytesToWord(_buf[4], _buf[5]);
   if (!_discreteInputs || _numDiscreteInputs == 0) _exceptionResponse(1);
@@ -161,7 +161,7 @@ void ModbusRTUSlave::_processReadDiscreteInputs() {
   }
 }
 
-void ModbusRTUSlave::_processReadHoldingRegisters() {
+void ModbusRTUSlave::processReadHoldingRegisters() {
   uint16_t startAddress = _bytesToWord(_buf[2], _buf[3]);
   uint16_t quantity = _bytesToWord(_buf[4], _buf[5]);
   if (!_holdingRegisters || _numHoldingRegisters == 0) _exceptionResponse(1);
@@ -177,7 +177,7 @@ void ModbusRTUSlave::_processReadHoldingRegisters() {
   }
 }
 
-void ModbusRTUSlave::_processReadInputRegisters() {
+void ModbusRTUSlave::processReadInputRegisters() {
   uint16_t startAddress = _bytesToWord(_buf[2], _buf[3]);
   uint16_t quantity = _bytesToWord(_buf[4], _buf[5]);
   if (!_inputRegisters || _numInputRegisters == 0) _exceptionResponse(1);
@@ -193,7 +193,7 @@ void ModbusRTUSlave::_processReadInputRegisters() {
   }
 }
 
-void ModbusRTUSlave::_processWriteSingleCoil() {
+void ModbusRTUSlave::processWriteSingleCoil() {
   uint16_t address = _bytesToWord(_buf[2], _buf[3]);
   uint16_t value = _bytesToWord(_buf[4], _buf[5]);
   if (!_coils ||_numCoils == 0) _exceptionResponse(1);
@@ -205,7 +205,7 @@ void ModbusRTUSlave::_processWriteSingleCoil() {
   }
 }
 
-void ModbusRTUSlave::_processWriteSingleHoldingRegister() {
+void ModbusRTUSlave::processWriteSingleHoldingRegister() {
   uint16_t address = _bytesToWord(_buf[2], _buf[3]);
   uint16_t value = _bytesToWord(_buf[4], _buf[5]);
   if (!_holdingRegisters || _numHoldingRegisters == 0) _exceptionResponse(1);
@@ -216,7 +216,7 @@ void ModbusRTUSlave::_processWriteSingleHoldingRegister() {
   }
 }
 
-void ModbusRTUSlave::_processWriteMultipleCoils() {
+void ModbusRTUSlave::processWriteMultipleCoils() {
   uint16_t startAddress = _bytesToWord(_buf[2], _buf[3]);
   uint16_t quantity = _bytesToWord(_buf[4], _buf[5]);
   if (!_coils || _numCoils == 0) _exceptionResponse(1);
@@ -230,7 +230,7 @@ void ModbusRTUSlave::_processWriteMultipleCoils() {
   }
 }
 
-void ModbusRTUSlave::_processWriteMultipleHoldingRegisters() {
+void ModbusRTUSlave::processWriteMultipleHoldingRegisters() {
   uint16_t startAddress = _bytesToWord(_buf[2], _buf[3]);
   uint16_t quantity = _bytesToWord(_buf[4], _buf[5]);
   if (!_holdingRegisters || _numHoldingRegisters == 0) _exceptionResponse(1);
