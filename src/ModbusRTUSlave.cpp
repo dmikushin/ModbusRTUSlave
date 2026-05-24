@@ -248,7 +248,10 @@ void ModbusRTUSlave::processWriteMultipleHoldingRegisters() {
 
 bool ModbusRTUSlave::_readRequest() {
   uint16_t numBytes = 0;
-  unsigned long startTime = 0;
+  // Seed startTime from the current clock so that an initial false read of
+  // _serial->available() (e.g. byte still latched in the ISR) does not
+  // immediately underflow the timeout check and exit with numBytes == 0.
+  unsigned long startTime = micros();
   do {
     if (_serial->available()) {
       startTime = micros();
@@ -257,6 +260,11 @@ bool ModbusRTUSlave::_readRequest() {
     }
   } while (micros() - startTime <= _charTimeout && numBytes < MODBUS_RTU_SLAVE_BUF_SIZE);
   while (micros() - startTime < _frameTimeout);
+  // Minimum legal Modbus RTU frame is address + function + CRC = 4 bytes.
+  // Anything shorter would underflow numBytes - 2 (uint16_t) when indexing
+  // _buf for the CRC, causing an out-of-bounds read that can randomly
+  // match the computed CRC and cause us to "accept" a malformed request.
+  if (numBytes < 4) return false;
   if (!_serial->available() && (_buf[0] == _id || _buf[0] == 0) && _crc(numBytes - 2) == _bytesToWord(_buf[numBytes - 1], _buf[numBytes - 2])) return true;
   else return false;
 }
